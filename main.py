@@ -12,14 +12,15 @@ screen = pygame.display.set_mode((1000, 500))
 
 # initializing Physics world
 space = pymunk.Space()
-space.gravity = 0, 0
+space.gravity = 0, -0.7
 
 # defining genome and genes of creature
 karl_genome = Genome()
-karl_genome.append_gene("shape", [0.2, 0.4, 0.8, 1, 1, 0.7, 0.5, 0.2])
-karl_genome.append_gene("width", 100)
-karl_genome.append_gene("length", 400)
-# implement mirroring for thruster gene
+karl_genome.append_gene("shape", [0.2, 0.6, 0.8, 1, 0.9, 0.7, 0.6, 0.2])
+karl_genome.append_gene("width", 50)
+karl_genome.append_gene("length", 200)
+
+# todo: implement mirroring for thruster gene
 karl_genome.append_gene("thrusters", [[1,0], [2,0], [4,0], [5,0]])
 
 # creating creature with given genome
