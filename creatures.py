@@ -1,3 +1,6 @@
+import pymunk
+import pygame.locals
+
 class Creature:
     """class responsible from creatures
     """
@@ -8,7 +11,7 @@ class Creature:
         self.updateDirs = False # thruster direction change next update
         self.applyThr = False # thrust to be applied next update
         self.mass = 1 # will be described in genome
-        self.position = (50,50) # will be described in genome
+        self.position = (100,100) # will be described in genome
 
 
     def build_phenotype(self):
@@ -18,8 +21,6 @@ class Creature:
         shape = self.genotype.extract_dna("shape")
         length = self.genotype.extract_dna("length")
         width = self.genotype.extract_dna("width")
-        # list of all thrusters
-        self.thruster_list = self.genotype.extract_dna("thrusters")
 
         self.points = [] # list of all points to construct poly
         vertebra = length/len(shape) # distance between each vertebra
@@ -39,9 +40,17 @@ class Creature:
         moment = pymunk.moment_for_poly(self.mass, self.points)
         self.body = pymunk.Body(self.mass, moment)
         self.body.position = self.position
-        self.shape = pymunk.Poly(body, self.points)
-        # TODO: change how thruster list is created, and make it store
-        # each thrusters position.
+        self.shape = pymunk.Poly(self.body, self.points)
+
+        # list of all thrusters
+        TL = self.genotype.extract_dna("thrusters")
+        thrusterList = []
+        for thr in TL:
+            coords = self.points[thr[0]]
+            vec = pygame.math.Vector2(0,1) # JUST A PLACEHOLDER, PLSFIX
+            vec.normalize()
+            thrusterList.append([coords, thr[1], vec])
+
 
 
     def update(self):
@@ -69,12 +78,12 @@ class Creature:
         directions[0] : Nr. of thruster, directions[1] : angle to add.
         """
         for instruction in directions:
-            thruster = self.thruster_list[directions[0]]
-            new_angle = thruster[2] + directions[1]
-            vec = pygame.math.Vector2(thruster[0], thruster[1])
+            thruster = self.thrusterList[directions[0]]
+            new_angle = thruster[1] + directions[1]
+            vec = pygame.math.Vector2(0,1)# JUST A PLACEHOLDER, PLSFIX
             vec.normalize()
             vec.rotate(new_angle)
-            self.thruster_list[directions[0]][3] = vec
+            self.thrusterList[directions[0]][2] = vec
 
 
     def apply_thrust(self, applyTo):
@@ -82,6 +91,6 @@ class Creature:
         applyTo : for now just list with int of every thruster to fire.
         """
         for instruction in applyTo:
-            thruster = self.thruster_list[applyTo]
-            self.body.apply_impulse_at_local_point(thruster[3])
+            thruster = self.thrusterList[applyTo]
+            self.body.apply_impulse_at_local_point(thruster[2])
 
