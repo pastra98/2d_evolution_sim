@@ -11,7 +11,7 @@ class Creature:
         self.updateDirs = True # thruster direction change next update
         self.applyThr = False # thrust to be applied next update
         self.mass = 1 # will calculated based on area in the future
-        self.position = (900,250) # will be described in genome
+        self.position = (500,260) # will be described in genome
 
 
     def build_phenotype(self):
@@ -28,9 +28,9 @@ class Creature:
 
         # calculating all the points that make up body
         for p in shape:
-            spine += vertebra
             point = (spine, p * width)
             self.points.append(point)
+            spine += vertebra
 
         for p in reversed(self.points):
             point = (p[0], p[1] * -1)
@@ -44,11 +44,26 @@ class Creature:
 
         # list of all thrusters
         TL = self.genotype.extract_dna("thrusters")
-        self.thrusterList = []
-        for thr in TL:
-            coords = self.points[thr[0]]
-            vec = pygame.math.Vector2(0,coords[1])
-            self.thrusterList.append([coords, thr[1], vec.normalize()])
+        self.thruster_l = []
+        for t in TL:
+            vec = pygame.math.Vector2(0, 1)
+            if t[1] == "lr":
+                mirror = True
+            else:
+                mirror = False
+            if t[1] == "r" or mirror:
+                coords = self.points[t[0]]
+                start = t[2]
+                end = t[3]
+                self.thruster_l.append([coords, mirror, start, end, vec])
+            if t[1] == "l" or mirror:
+                vec = vec.rotate(180)
+                left_side = self.points[::-1]
+                coords = left_side[t[0]]
+                start = 360 - t[2]
+                end = 360 - t[3]
+                self.thruster_l.append([coords, mirror, start, end, vec])
+
 
 
     def update(self):
@@ -64,23 +79,15 @@ class Creature:
         #     self.apply_thrust()
 
 
-    def get_directions(self):
-        """bandaid solution for testing if apply thrust works.
-        """
-        pass
-
-
     def update_directions(self, directions):
-        """changes thrust vectors (thruster[3]) of specified thrusters.
-        directions[0] : Nr. of thruster, directions[1] : angle to add.
-        Lot's to fix here, for now angle to add only valid if 45>a>0
+        """changes thrust vectors (thruster[4]) of specified thrusters.
+        instr[0] : Nr. of thruster, instr[1]: percent of firing radius
         """
-        for instruction in directions:
-            thruster = self.thrusterList[instruction[0]]
-            new_angle = thruster[1] + instruction[1]
-            vec = pygame.math.Vector2(0, 1)
-            vec = vec.rotate(new_angle)
-            self.thrusterList[instruction[0]][2] = vec
+        for instr in directions:
+            thr = self.thruster_l[instr[0]]
+            new_angle = thr[2] + instr[1] * (thr[3] - thr[2])
+            vec = pygame.math.Vector2(-1, 0).rotate(new_angle)
+            self.thruster_l[instr[0]][4] = vec
 
 
     def apply_thrust(self, applyTo):
@@ -88,6 +95,6 @@ class Creature:
         applyTo : for now just list with int of every thruster to fire.
         """
         for thr_number in applyTo:
-            thruster = self.thrusterList[thr_number]
-            self.body.apply_impulse_at_local_point(thruster[2])
+            thr = self.thruster_l[thr_number]
+            self.body.apply_impulse_at_local_point(thr[4], thr[0])
 
