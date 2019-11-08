@@ -11,7 +11,7 @@ class Creature:
         self.updateDirs = True # thruster direction change next update
         self.applyThr = False # thrust to be applied next update
         self.mass = 1 # will calculated based on area in the future
-        self.position = (500,260) # will be described in genome
+        self.position = (500,260) # will be described somewhere else
 
 
     def build_phenotype(self):
