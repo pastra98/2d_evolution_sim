@@ -21,8 +21,7 @@ karl_genome.append_gene("shape",[0.4, 0.8, 0.7, 0.3])
 karl_genome.append_gene("width",50)
 karl_genome.append_gene("length",200)
 
-# todo: implement mirroring for thruster gene
-# thruster[1] (startAngle): 270<topvec>45 / 225>botvec>90
+# thruster genes: PointNr, left/right/or both, startAngle,endAngle
 karl_genome.append_gene("thrusters", [[0, "lr", 0, 90],
                                       [3, "lr", 90, 180]])
 
