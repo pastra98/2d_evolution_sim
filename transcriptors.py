@@ -130,9 +130,9 @@ class Transcriptor(ShapeTranscriptor, ThrusterTranscriptor):
         self.rna = genes_to_express # genes to be expressed
 
     def express_genome(self):
-        """hands the dict of expressed genes to the specialized sub-
-        transcriptors. Compiles the transcription_data dictionary from
-        all data returned by subtranscriptors.
+        """hands the dict of expressed genes to the specialized
+        sub-ranscriptors. Then returns the updated transcription_data
+        dictionary filled with all data decoded by the subtranscriptors.
         """
         self.express_shape()
         self.express_thrusters()
