@@ -1,4 +1,5 @@
 from genes import Genome
+from genes import Gene
 from creatures import Creature
 
 import pygame
@@ -17,22 +18,23 @@ space.damping = 0.95 # basically global friction for every body
 
 # defining genome and genes of creature
 karl_genome = Genome()
-karl_genome.append_gene("shape",[0.4, 0.8, 0.7, 0.3])
-karl_genome.append_gene("width",50)
-karl_genome.append_gene("length",200)
-
-# thruster genes: PointNr, left/right/or both, startAngle,endAngle
-karl_genome.append_gene("thrusters", [[0, "lr", 0, 90],
-                                      [3, "lr", 90, 180]])
+shape_gene = Gene("shape", [0.4, 0.8, 0.7, 0.3])
+width_gene = Gene("width", 50)
+length_gene = Gene("length", 200)
+thr1_gene = Gene("thruster", [0, "lr", 0, 90])
+thr2_gene = Gene("thruster", [3, "lr", 90, 180])
+karl_genepool = [shape_gene, width_gene, length_gene, thr1_gene, thr2_gene]
+# adding genes to karl
+karl_genome.append_genes(karl_genepool)
 
 # creating creature with given genome
 karl = Creature(karl_genome)
-karl.build_phenotype()
+karl.birth()
 space.add(karl.body, karl.shape)
 
 # collection of turning instructions
-forward = [[0, 0], [1, 0]]
-back = [[2, 1], [3, 1]]
+forward  = [[2, 1], [3, 1]]
+back = [[0, 0], [1, 0]]
 left = [[0, 1], [3, 0]]
 right = [[1, 1], [2, 0]]
 
@@ -54,10 +56,10 @@ while game_running:
     elif ev.type == pygame.KEYDOWN:
         if ev.key == pygame.locals.K_UP:
             karl.update_directions(forward)
-            karl.apply_thrust([0, 1])
+            karl.apply_thrust([2, 3])
         elif ev.key == pygame.locals.K_DOWN:
             karl.update_directions(back)
-            karl.apply_thrust([2, 3])
+            karl.apply_thrust([0, 1])
         elif ev.key == pygame.locals.K_LEFT:
             karl.update_directions(left)
             karl.apply_thrust([0, 3])
