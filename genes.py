@@ -1,6 +1,7 @@
 from transcriptors import Transcriptor
 
 # Holds DNA and performs all relevant actions
+
 class Genome:
     """class that holds the dna with all it's genes. Also contains
     a Transcriptor object that is required for expressing gene
