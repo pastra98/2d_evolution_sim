@@ -1,4 +1,4 @@
-from transcriptors import Transcriptor
+from translators import Transcriptor
 
 # Holds DNA and performs all relevant actions
 
