@@ -1,4 +1,4 @@
-from translators import Transcriptor
+from translators import Translator
 
 # Holds DNA and performs all relevant actions
 
@@ -19,7 +19,7 @@ class Genome:
         for gene in genes:
             self.dna.append(gene)
 
-    def transcribe_genome(self):
+    def transcript_genome(self):
         """Reads a gene, determines if it should be expressed and
         assigns it to a list, based on its type. This list represents
         the data of all genes of a given type. All gene types are then
@@ -33,7 +33,7 @@ class Genome:
                 else:
                     self.to_transcribe[gene.type] = [gene]
 
-        self.transcriptor = Transcriptor(self.to_transcribe)
+        self.translator = Translator(self.to_transcribe)
 
 
 # Describes a single gene
