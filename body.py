@@ -5,7 +5,7 @@ import pygame.locals
 # appearance of creatures. At the moment it contains a transcriptor
 # that returns a creatures points, physics body and physics shape.
 
-class ShapeTranscriptor:
+class ShapeTranslator:
     """Calculates a list of points describing the shape of the creature.
     Uses this information to build a pymunk body and shape.
     """
@@ -23,8 +23,7 @@ class ShapeTranscriptor:
         """
         points = self.calculate_points(rna)
         body, shape = self.body_and_shape(points)
-        t_data = {"points" : points, "body" : body, "shape" : shape}
-        return t_data
+        return {"points" : points, "body" : body, "shape" : shape}
 
     def calculate_points(self, rna):
         """Extracts gene data from rna.
