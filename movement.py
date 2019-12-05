@@ -5,7 +5,7 @@ import pygame.locals
 # simulated space. It contains a thruster class and a transcriptor for
 # generating thrusters based on dna. Will add a ThrusterSystem class.
 
-class ThrusterTranscriptor:
+class ThrusterTranslator:
     """Builds a list of thrusters and updates transcription_data with it.
     Can only be run after ShapeTranscriptor has run.
     To-Do: Limit thrust vector, Max_thrust_strength parameter.
@@ -16,22 +16,22 @@ class ThrusterTranscriptor:
         self.required_data = ["body", "points"]
 
     def run(self, rna, data):
-        """Starts transcription process for building thrusters.
+        """Starts translation process for building thrusters.
         """
         for check_data in self.required_data:
             if check_data not in data:
                 return None
 
         self.point_l = data["points"]
-        self.body = data["body"]
         self.rna = rna
         thruster_l = self.make_thrusters()
-        return {"thruster_l" : thruster_l}
+        thruster_sys = ThrusterSystem(thruster_l, data["body"])
+        return {"thruster_l" : thruster_l, "thruster_sys" : thruster_sys}
 
     def make_thrusters(self):
         """method that initializes all thrusters described in the rna.
         """
-        thruster_l = [] # this gets returned to main transcriptor.
+        thruster_l = [] # this gets returned to main translator.
         blueprints = self.rna["thruster"]
 
         for instruction in blueprints:
@@ -63,11 +63,6 @@ class ThrusterTranscriptor:
                     thruster_l.append(t_l)
 
         return thruster_l
-        # make a ThrusterSystem object, that tracks all thrusters
-        # and performs updates and thrusting. this object should have
-        # a reference to the creature body and be the interface to the
-        # brain.
-
 
 
 class Thruster:
@@ -80,25 +75,53 @@ class Thruster:
         self.mirrored = mirrored
         self.vec = pygame.math.Vector2(1,0) # vec pointing 9 o'clock
 
-    def update_direction(self, firing_rad_percent):
+    def update(self, rad, power=1):
         """changes thrust vector of specified thruster. Method: calculates
-        angle within firing radius. If fire_rad = 0. -> angle = start_a,
-        if fire_rad = 1. -> angle = end_a.
+        angle within firing radius. If rad = 0. -> angle = start_a,
+        if rad = 1. -> angle = end_a. power is multiplied with vec.
         """
-        new_angle = start_a + firing_rad_percent * (end_a - start_a)
-        # vec pointing 9 o'clock is rotated clockwise
-        self.vec = pygame.math.Vector2(-1, 0).rotate(-new_angle)
+        new_angle = self.start_a + rad * (self.end_a-self.start_a)
+        # vec pointing 9 o'clock is rotated clockwise, and is multiplied by
+        # power for negative impulse
+        self.vec = pygame.math.Vector2(-1, 0).rotate(-new_angle) * power
 
-    def apply_thrust(self, power):
-        """applies thrust of specified strength.
-        """
-        self.vec *= power
 
-# TESTING AREA
-# trans_data = {"body" : "somebody", "points" : [(-10,2), (0,5), (10,2),
-#                                                (10,-2), (0,-5), (-10,-2)]}
-# rna = {"thruster" : [[0, True, 0, 90], [2, True, 90, 180]]}
-# test_transc = ThrusterTranscriptor()
-# t_list = test_transc.run(rna, trans_data)
-# for thruster in t_list:
-#     print(thruster.point, thruster.start_a, thruster.end_a, thruster.mirrored)
+class ThrusterSystem:
+    """Manages all thrusters of a creature.
+    """
+    def __init__(self, thruster_l, body):
+        self.thruster_l = thruster_l
+        self.body = body
+
+    def turn(self, direction):
+        if direction == "left":
+            apply_to = [self.thruster_l[0], self.thruster_l[3]]
+            self.thruster_l[0].update(1)
+            self.thruster_l[3].update(0)
+        elif direction == "right":
+            apply_to = [self.thruster_l[1], self.thruster_l[2]]
+            self.thruster_l[1].update(1)
+            self.thruster_l[2].update(0)
+
+        for t in apply_to: self.body.apply_impulse_at_local_point(-t.vec, t.point)
+
+    def move(self, direction):
+        if direction == "forward":
+            apply_to = [self.thruster_l[2], self.thruster_l[3]]
+            self.thruster_l[2].update(1)
+            self.thruster_l[3].update(1)
+        elif direction == "backward":
+            apply_to = [self.thruster_l[0], self.thruster_l[1]]
+            self.thruster_l[0].update(0)
+            self.thruster_l[1].update(0)
+        elif direction == "left":
+            apply_to = [self.thruster_l[0], self.thruster_l[2]]
+            self.thruster_l[0].update(1)
+            self.thruster_l[2].update(0)
+        elif direction == "right":
+            apply_to = [self.thruster_l[1], self.thruster_l[3]]
+            self.thruster_l[1].update(1)
+            self.thruster_l[3].update(0)
+
+        for t in apply_to: self.body.apply_impulse_at_local_point(-t.vec, t.point)
+
