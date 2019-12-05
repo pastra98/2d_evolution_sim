@@ -1,10 +1,10 @@
-from body import ShapeTranscriptor
-from movement import ThrusterTranscriptor
+from body import ShapeTranslator
+from movement import ThrusterTranslator
 
 # Transcriptors are responsible for performing the instructions of genes
 # and temporarily storing relevant data described in genes.
 
-class Transcriptor:
+class Translator:
     """This class contains all methods that are required for transcription.
     Somewhat analogous to ribosomes, mRNA, proteins and everything to
     do with gene transcription and expression.
@@ -17,27 +17,27 @@ class Transcriptor:
         Returns a second dict that stores all information returned
         by subtranscriptors(parent classes).
         """
-        self.transcription_data = {}
-        self.rna = genes_to_express # genes to be expressed
-        self.shape_transcriptor = ShapeTranscriptor()
-        self.thruster_transcriptor = ThrusterTranscriptor()
-        self.sub_transcriptors = [self.shape_transcriptor,
-                                  self.thruster_transcriptor]
+        self.translation_data = {}
+        self.rna = genes_to_express
+        self.shape_translator = ShapeTranslator()
+        self.thruster_translator = ThrusterTranslator()
+        self.sub_translators = [self.shape_translator,
+                                  self.thruster_translator]
 
-    def express_genome(self):
+    def translate_genome(self):
         """hands the dict of expressed genes to the specialized
         sub-ranscriptors. Then returns the updated transcription_data
         dictionary filled with all data decoded by the subtranscriptors.
         """
-        while len(self.sub_transcriptors) > 0:
-            for sub_t in self.sub_transcriptors:
-                t_data = sub_t.run(self.rna, self.transcription_data)
+        while len(self.sub_translators) > 0:
+            for sub_t in self.sub_translators:
+                t_data = sub_t.run(self.rna, self.translation_data)
                 if t_data == None:
                     pass
                 else:
-                    self.transcription_data.update(t_data)
-                    self.sub_transcriptors.remove(sub_t)
+                    self.translation_data.update(t_data)
+                    self.sub_translators.remove(sub_t)
 
-        return self.transcription_data
+        return self.translation_data
 
 
