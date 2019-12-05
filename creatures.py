@@ -16,9 +16,9 @@ class Creature:
     def birth(self):
         """builds a genotype body based on limited amt of genes.
         """
-        self.genome.transcribe_genome()
-        self.data_dict = self.genome.transcriptor.express_genome()
-        self.thruster_l = self.data_dict["thruster_l"]
+        self.genome.transcript_genome()
+        self.data_dict = self.genome.translator.translate_genome()
+        self.thruster_sys = self.data_dict["thruster_sys"]
         self.body = self.data_dict["body"]
         self.shape = self.data_dict["shape"]
         self.body.position = self.position
