@@ -15,13 +15,13 @@ _global_script_class_icons={
 
 [application]
 
-config/name="godot_ver"
+config/name="evolution_sim"
 run/main_scene="res://Main.tscn"
 
 [autoload]
 
 GenotypeManager="*res://GenotypeManager/GenotypeManager.tscn"
-DNATranslator="*res://DNATranslator/DNATranslator.tscn"
+Translator="*res://Translator/Translator.tscn"
 
 [rendering]
 
