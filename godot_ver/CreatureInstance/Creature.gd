@@ -20,16 +20,15 @@ func _process(delta):
 	"""
 	update()
 	# if Input.is_action_pressed("ui_up"):
-        # get_node("ThrusterSystem").move("forward")
+		# get_node("ThrusterSystem").move("forward")
 	# if Input.is_action_pressed("ui_down"):
-        # get_node("ThrusterSystem").move("back")
+		# get_node("ThrusterSystem").move("back")
 	# if Input.is_action_pressed("ui_left"):
-        # get_node("ThrusterSystem").move("left")
+		# get_node("ThrusterSystem").move("left")
 	# if Input.is_action_pressed("ui_right"):
-        # get_node("ThrusterSystem").move("right")
-
-	if Input.is_action_pressed("ui_down"):
-        get_node("ThrusterSystem").hello()
+		# get_node("ThrusterSystem").move("right")
+	# if Input.is_action_pressed("ui_down"):
+		# get_node("ThrusterSystem").hello()
 	# brain.update()
 
 

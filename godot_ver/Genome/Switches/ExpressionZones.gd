@@ -18,6 +18,13 @@ func _init(expression_zones: Array):
 	self.expression_zones = expression_zones
 
 
+func check_expression_zones(scaled_value: float):
+	for zone in expression_zones:
+		if scaled_value >= zone[0] and scaled_value <= zone[1]:
+			return true
+	return false
+
+
 func mutate():
 	rng.randomize()
 	if rng.randf() <= mutation_chance:
@@ -25,6 +32,7 @@ func mutate():
 			new_zone()
 		if rng.randf() <= remove_probability:
 			remove_zone()
+
 
 func remove_zone():
 	if expression_zones.size() != 0:
