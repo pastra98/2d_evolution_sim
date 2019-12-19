@@ -1,6 +1,6 @@
 extends RigidBody2D
 
-onready var brain = $"Brain"
+# onready var brain = $"Brain"
 
 var pos: Vector2
 var id: String

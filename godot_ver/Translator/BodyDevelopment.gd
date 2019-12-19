@@ -1,10 +1,11 @@
 extends Node
 
+var ThrusterSystem = preload("res://Translator/Parts/ThrusterSystem.tscn")
+var Thruster = preload("res://Translator/Parts/Thruster.gd")
+
 var dna
 var data
 var creature_path
-var ThrusterSystem = preload("res://Translator/Parts/ThrusterSystem.tscn")
-var Thruster = preload("res://Translator/Parts/Thruster.gd")
 var points = Array()
 var length
 var max_thruster_strength = 10
@@ -18,6 +19,7 @@ func translate():
 
 
 func body_shape():
+	points.clear()
 	var shape = dna["shape"].dimensions
 	var width = dna["width"].width
 	self.length = dna["length"].length
@@ -54,24 +56,34 @@ func make_thruster_pair(point_index: int, scaled: float):
 	var angle_gene = dna["ThrusterAngle"]
 	var strength_gene = dna["ThrusterStrength"]
 
+	# extracting genetic information for angle and strength based on position
 	var decimal = stepify(scaled, 0.1) * 10
 	var angle = angle_gene.get_angle(decimal)
 	var strength = max_thruster_strength * strength_gene.get_strength(decimal)
 
-	print(point_index)
-	# print(decimal)
-	# print(angle)
-	# print(strength)
-	# divide angle by strength
+	# limits of the thrusting radius
+	var thrust_radius = 45
+	var start_vec = Vector2(1, 0).rotated(deg2rad(angle - thrust_radius/2))
+	var end_vec = Vector2(1, 0).rotated(deg2rad(angle + thrust_radius/2))
 
-	if point_index == 0:
-		pass # don't limit the start angle, because it's the first point
-	elif point_index == points.size() - 1: # check if that is correct!
-		pass # don't limit the end angle, because it's the last point
-	else:
-		pass
+	# creature shape left and right of the specified point
+	var front_vec = (points[point_index - 1] - points[point_index]).normalized()
+	var back_vec = (points[point_index + 1] - points[point_index]).normalized()
+
+	# make sure thrust angle is outside of creature body
+	if start_vec.y < back_vec.y:
+		start_vec = back_vec
+	if end_vec.y < front_vec.y:
+		end_vec = front_vec
 	
-	var front_vec = points[point_index - 1] - points[point_index]
-	var back_vec = points[point_index + 1] - points[point_index]
-	print("front_vec %s" % rad2deg(front_vec.angle()))
-	print("back_vec %s" % rad2deg(back_vec.angle()))
+	# Instance two thrusters
+	var u_point = points[point_index]
+	var l_point = Vector2(u_point.x, u_point.y * -1)
+
+	var upper_thruster = Thruster.new(u_point, start_vec, end_vec, strength)
+	get_node(str(creature_path) + "/ThrusterSystem").add_child(upper_thruster)
+
+	start_vec.y *= -1 # mirror along y axis
+	end_vec.y *= -1 # mirror along y axis
+	var lower_thruster = Thruster.new(l_point, start_vec, end_vec, strength)
+	get_node(str(creature_path) + "/ThrusterSystem").add_child(lower_thruster)
