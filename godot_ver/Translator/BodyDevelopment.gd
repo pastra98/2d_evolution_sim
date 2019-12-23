@@ -81,9 +81,10 @@ func make_thruster_pair(point_index: int, scaled: float):
 	var l_point = Vector2(u_point.x, u_point.y * -1)
 
 	var upper_thruster = Thruster.new(u_point, start_vec, end_vec, strength)
-	get_node(str(creature_path) + "/ThrusterSystem").add_child(upper_thruster)
+	get_node(str(creature_path) + "/ThrusterSystem").thrusters.append(upper_thruster)
 
 	start_vec.y *= -1 # mirror along y axis
 	end_vec.y *= -1 # mirror along y axis
 	var lower_thruster = Thruster.new(l_point, start_vec, end_vec, strength)
-	get_node(str(creature_path) + "/ThrusterSystem").add_child(lower_thruster)
+	get_node(str(creature_path) + "/ThrusterSystem").thrusters.append(lower_thruster)
+	get_node(str(creature_path) + "/ThrusterSystem")._draw()

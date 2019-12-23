@@ -2,7 +2,7 @@
 
 [ext_resource path="res://Translator/Translator.gd" type="Script" id=1]
 [ext_resource path="res://Translator/BodyDevelopment.gd" type="Script" id=2]
-[ext_resource path="res://Translator/LocomotionTranslator.gd" type="Script" id=3]
+[ext_resource path="res://Translator/BrainDevelopment.gd" type="Script" id=3]
 
 [node name="Translator" type="Node"]
 script = ExtResource( 1 )
@@ -10,5 +10,5 @@ script = ExtResource( 1 )
 [node name="BodyDevelopment" type="Node" parent="."]
 script = ExtResource( 2 )
 
-[node name="LocomotionTranslator" type="Node" parent="."]
+[node name="BrainDevelopment" type="Node" parent="."]
 script = ExtResource( 3 )

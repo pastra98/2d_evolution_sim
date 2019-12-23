@@ -9,3 +9,4 @@ func express_dna(dna, c_path):
 	self.dna = dna
 	self.creature_path = c_path
 	$BodyDevelopment.translate()
+	$BrainDevelopment.translate()

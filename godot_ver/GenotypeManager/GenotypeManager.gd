@@ -10,7 +10,7 @@ func new_creature(dna: Dictionary, pos: Vector2):
 	"""
 	creature_counter += 1
 	var creature_inst = creature.instance()
-	creature_inst.pos = pos
+	creature_inst.set_global_position(pos)
 	creature_inst.id = str(creature_counter)
 	
 	creatures_node.add_child(creature_inst)
