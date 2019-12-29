@@ -1,6 +1,6 @@
 extends Node2D
 
-var thrusters = []
+var thrusters = [] # thrusters are already child, maybe change this?
 var target: Vector2
 var time = 0 # Should I get rid of this stuff?
 
@@ -16,6 +16,8 @@ func _process(delta):
 	time += delta
 	if time > 1:
 		print(target)
+		var transform = thrusters[0].get_global_transform()
+		print(transform.xform(thrusters[0].start_vec))
 		time = 0
 
 

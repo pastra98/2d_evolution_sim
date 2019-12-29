@@ -2,7 +2,9 @@ extends Node
 
 var Food = preload("Food.tscn")
 
-func _input(event):
+func _unhandled_input(event):
+	"""Just a temporary func here, this file will handle other stuff later
+	"""
 	if event is InputEventMouseButton:
 		if event.button_index == 1 and event.is_pressed():
 			var new_food = Food.instance()

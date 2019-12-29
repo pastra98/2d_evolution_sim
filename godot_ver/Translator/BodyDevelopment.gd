@@ -46,13 +46,13 @@ func appendage_development():
 
 	# thruster hox gene decides where thrusters will develop
 	var thruster_hox = dna["ThrusterHox"]
-	for i in range(points.size() / 2): # No list slicing ):
+	for i in range(points.size() / 2): # No list slicing 🙁
 		var scaled = (points[i].x + length/2) / length # position relative to length
 		if thruster_hox.is_expressed(scaled):
-			make_thruster_pair(i, scaled)
+			make_thruster_pair(i, scaled, TS_path)
 
 
-func make_thruster_pair(point_index: int, scaled: float):
+func make_thruster_pair(point_index: int, scaled: float, TS_path: String):
 	var angle_gene = dna["ThrusterAngle"]
 	var strength_gene = dna["ThrusterStrength"]
 
@@ -81,10 +81,12 @@ func make_thruster_pair(point_index: int, scaled: float):
 	var l_point = Vector2(u_point.x, u_point.y * -1)
 
 	var upper_thruster = Thruster.new(u_point, start_vec, end_vec, strength)
-	get_node(str(creature_path) + "/ThrusterSystem").thrusters.append(upper_thruster)
+	get_node(TS_path).thrusters.append(upper_thruster)
+	get_node(TS_path).add_child(upper_thruster)
 
 	start_vec.y *= -1 # mirror along y axis
 	end_vec.y *= -1 # mirror along y axis
 	var lower_thruster = Thruster.new(l_point, start_vec, end_vec, strength)
-	get_node(str(creature_path) + "/ThrusterSystem").thrusters.append(lower_thruster)
-	get_node(str(creature_path) + "/ThrusterSystem")._draw()
+	get_node(TS_path).thrusters.append(lower_thruster)
+	get_node(TS_path).add_child(lower_thruster)
+	get_node(TS_path)._draw()
