@@ -10,7 +10,7 @@ func _ready():
 	collider.set_point_cloud(points)
 	var shape_id = create_shape_owner(shape_owner)
 	shape_owner_add_shape(shape_id, collider)
-	add_torque(25.0)
+	add_torque(18.0)
 
 
 func _process(delta):

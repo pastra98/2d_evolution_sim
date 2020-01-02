@@ -10,6 +10,7 @@ var points = Array()
 var length
 var max_thruster_strength = 10
 
+
 func translate():
 	self.dna = get_parent().dna
 	self.data = get_parent().temp_data
@@ -51,15 +52,20 @@ func appendage_development():
 		if thruster_hox.is_expressed(scaled):
 			make_thruster_pair(i, scaled, TS_path)
 
+	# once thrusters are all made, turn them into array, and draw them
+	get_node(TS_path).thrusters = get_node(TS_path).get_children()
+	get_node(TS_path)._draw()
+
 
 func make_thruster_pair(point_index: int, scaled: float, TS_path: String):
 	var angle_gene = dna["ThrusterAngle"]
 	var strength_gene = dna["ThrusterStrength"]
 
 	# extracting genetic information for angle and strength based on position
-	var decimal = stepify(scaled, 0.1) * 10
+	var decimal = stepify(scaled, 0.1) * 10 # Make usable as array index
 	var angle = angle_gene.get_angle(decimal)
 	var strength = max_thruster_strength * strength_gene.get_strength(decimal)
+	# strength /= angle # decrease strength based on angle, tweak this!
 
 	# limits of the thrusting radius
 	var thrust_radius = 45
@@ -81,12 +87,9 @@ func make_thruster_pair(point_index: int, scaled: float, TS_path: String):
 	var l_point = Vector2(u_point.x, u_point.y * -1)
 
 	var upper_thruster = Thruster.new(u_point, start_vec, end_vec, strength)
-	get_node(TS_path).thrusters.append(upper_thruster)
 	get_node(TS_path).add_child(upper_thruster)
 
 	start_vec.y *= -1 # mirror along y axis
 	end_vec.y *= -1 # mirror along y axis
 	var lower_thruster = Thruster.new(l_point, start_vec, end_vec, strength)
-	get_node(TS_path).thrusters.append(lower_thruster)
 	get_node(TS_path).add_child(lower_thruster)
-	get_node(TS_path)._draw()
