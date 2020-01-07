@@ -47,7 +47,7 @@ func appendage_development():
 
 	# thruster hox gene decides where thrusters will develop
 	var thruster_hox = dna["ThrusterHox"]
-	for i in range(points.size() / 2): # No list slicing 🙁
+	for i in range(points.size() / 2): # No list slicing  
 		var scaled = (points[i].x + length/2) / length # position relative to length
 		if thruster_hox.is_expressed(scaled):
 			make_thruster_pair(i, scaled, TS_path)
@@ -65,31 +65,25 @@ func make_thruster_pair(point_index: int, scaled: float, TS_path: String):
 	var decimal = stepify(scaled, 0.1) * 10 # Make usable as array index
 	var angle = angle_gene.get_angle(decimal)
 	var strength = max_thruster_strength * strength_gene.get_strength(decimal)
-	# strength /= angle # decrease strength based on angle, tweak this!
 
-	# limits of the thrusting radius
-	var thrust_radius = 45
-	var start_vec = Vector2(1, 0).rotated(deg2rad(angle - thrust_radius/2))
-	var end_vec = Vector2(1, 0).rotated(deg2rad(angle + thrust_radius/2))
+	# THIS NEEDS TO BE CALCULATED BASED ON STRENGTH
+	var arc = PI / 3
 
 	# creature shape left and right of the specified point
-	var front_vec = (points[point_index - 1] - points[point_index]).normalized()
-	var back_vec = (points[point_index + 1] - points[point_index]).normalized()
+	# var front_angle = (points[point_index + 1] - points[point_index]).angle()
+	# var back_angle = (points[point_index - 1] - points[point_index]).angle()
 
 	# make sure thrust angle is outside of creature body
-	if start_vec.y < back_vec.y:
-		start_vec = back_vec
-	if end_vec.y < front_vec.y:
-		end_vec = front_vec
+	# if angle + arc/2 > front_angle:
+		# angle = front_angle
+	# if angle - arc/2 < back_angle:
+		# angle = back_angle
 	
 	# Instance two thrusters
-	var u_point = points[point_index]
-	var l_point = Vector2(u_point.x, u_point.y * -1)
+	var point = points[point_index]
 
-	var upper_thruster = Thruster.new(u_point, start_vec, end_vec, strength)
+	var upper_thruster = Thruster.new(point, angle, arc, strength)
 	get_node(TS_path).add_child(upper_thruster)
 
-	start_vec.y *= -1 # mirror along y axis
-	end_vec.y *= -1 # mirror along y axis
-	var lower_thruster = Thruster.new(l_point, start_vec, end_vec, strength)
+	var lower_thruster = Thruster.new(point*Vector2(1,-1), -angle, arc, strength)
 	get_node(TS_path).add_child(lower_thruster)
