@@ -1,24 +1,25 @@
 extends Node2D
 
-var nearest_food
-var pos: Vector2
+var closest_food
 onready var sensor = get_node("../Sensor") # make this defined procedurally
 onready var thruster_system = get_node("../ThrusterSystem")
 
 func update_state():
-	pos = get_global_position()
-	
-	nearest_food = find_nearest_food()
-	if typeof(nearest_food) == TYPE_VECTOR2:
-		thruster_system.target = nearest_food
+	closest_food = find_closest_food()
+	if typeof(closest_food) == TYPE_VECTOR2:
+		thruster_system.target = closest_food
 
  
-func find_nearest_food():
-	# make this function nicer pls
+func find_closest_food():
 	var areas = sensor.get_overlapping_areas()
-	var sorted_areas = []
+	var min_distance = sensor.sensor_shape.radius
+	var closest_food
+	
 	for area in areas:
 		if area.is_in_group("food"):
-			sorted_areas.append([pos.distance_to(area.get_global_position()), area])
-	if not sorted_areas.empty():
-		return sorted_areas.min()[1].get_global_position()
+			var distance = global_position.distance_to(area.global_position)
+			if distance < min_distance:
+				min_distance = distance
+				closest_food = area
+	if typeof(closest_food) != TYPE_NIL:
+		return closest_food.global_position
