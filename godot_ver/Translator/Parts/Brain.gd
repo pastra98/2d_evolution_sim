@@ -2,10 +2,10 @@ extends Node2D
 
 var nearest_food
 var pos: Vector2
-onready var sensor = get_node("../Sensor")
+onready var sensor = get_node("../Sensor") # make this defined procedurally
 onready var thruster_system = get_node("../ThrusterSystem")
 
-func update():
+func update_state():
 	pos = get_global_position()
 	
 	nearest_food = find_nearest_food()
