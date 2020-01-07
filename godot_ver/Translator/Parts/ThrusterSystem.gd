@@ -5,44 +5,43 @@ var thrusters: Array # thrusters are already child, maybe change this?
 var target: Vector2
 var time = 0
  
+var desired_direction: Vector2
+var target_vector = target - position
 
-func _process(delta):
-	"""Movement update method could be called here or in update method
-	that gets called by brain, such that it only updates, when brain
-	updates.
-	"""
-	time += delta
-	if time > 1:
-		var impulse = calculate_desired_impulse()
-		print(impulse)
-		# movement_decision(impulse)
-		time = 0
+func update_movement():
+	var desired_angle = desired_ocs_impulse_angle()
+	movement_decision(desired_angle)
+
+	desired_direction = Vector2(80,0).rotated(desired_angle)
+	target_vector = target - global_position
+	print(target, position)
+	update()
 
 
 func _draw():
+	draw_line(Vector2(0,0), desired_direction, Color.white, 2)
+	draw_line(Vector2(0,0), target_vector, Color.yellow, 2)
 	for t in thrusters:
 		draw_line(t.attach_point, t.start_vec_draw, Color.blue, 5)
 		draw_line(t.attach_point, t.end_vec_draw, Color.green, 5)
+		pass
 
 
-func calculate_desired_impulse():
-	"""takes target position, calculates vector from creature to target,
-	normalizes this vector, and transforms it to allow comparing it to thruster
-	vectors. 
+func desired_ocs_impulse_angle():
+	"""I fucking hate angles so much. Worst code ever.
 	"""
-	var desired_impulse = get_global_position() - target
-	# desired_impulse = desired_impulse.normalized()
-	# desired_impulse = desired_impulse.rotated(transform.get_rotation()) * -1
-	# return desired_impulse
-	return rad2deg(desired_impulse.angle())
+	var desired_impulse = target - global_position 
+	var creature_rotation = get_node("..").rotation
+	desired_impulse = desired_impulse.rotated(-creature_rotation)
+	# desired_impulse = desired_impulse * -1
+	return desired_impulse.angle_to(Vector2(-1,0))
 
 
-func movement_decision(impulse: Vector2):
+func movement_decision(desired_angle):
 	var some_list = []
 
 	for thruster in thrusters:
-		some_list.append(thruster.get_movement_efficiency(impulse))
-	
-	# print(get_global_position() - target)
-	# print(impulse)
-	print(some_list)
+		if thruster.get_movement_efficiency(desired_angle) > 0.9:
+			var imp_pos = thruster.attach_point
+			var imp_vec = Vector2(5,0).rotated(desired_angle) * -1
+			get_parent().apply_impulse(imp_pos, imp_vec)
