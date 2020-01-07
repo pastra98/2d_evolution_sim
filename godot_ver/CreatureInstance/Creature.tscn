@@ -1,7 +1,7 @@
 [gd_scene load_steps=3 format=2]
 
 [ext_resource path="res://CreatureInstance/Creature.gd" type="Script" id=1]
-[ext_resource path="res://CreatureInstance/Sensor.gd" type="Script" id=2]
+[ext_resource path="res://Translator/Parts/Sensor.gd" type="Script" id=2]
 
 [node name="Creature" type="RigidBody2D"]
 script = ExtResource( 1 )
