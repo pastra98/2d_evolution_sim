@@ -4,7 +4,7 @@ var genome = preload("res://Genome/Genome.gd")
 
 var length = load("res://Genome/CodingGenes/Length.gd").new(200, true)
 var width = load("res://Genome/CodingGenes/Width.gd").new(50, true)
-var shape = load("res://Genome/CodingGenes/Shape.gd").new([0.3, 0.6, 0.4, 0.3], true)
+var shape = load("res://Genome/CodingGenes/Shape.gd").new([0.2, 0.6, 0.8, 0.4], true)
 
 var t_hox_switch = load("res://Genome/Switches/ExpressionZones.gd").new([[0.2,0.4], [0.6,0.8]])
 var thruster_hox = load("res://Genome/CodingGenes/ThrusterHox.gd").new(t_hox_switch, true)

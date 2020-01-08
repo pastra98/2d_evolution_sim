@@ -1,18 +1,18 @@
 extends Node2D
 
-var angle: float
-var min_angle: float
-var max_angle: float
+var angle # removed typing because receiving ints is also possible.
+var min_angle
+var max_angle
 
-var arc: float
-var strength: float
+var arc
+var strength
 
 # debugging vars, fix this shit
 var draw_angle: float
 var update_draw = false
 
 func _init(attach_point, angle, arc, strength):
-	self.position = attach_point 
+	self.position = attach_point * 0.5
 	self.strength = strength
 	self.angle = angle
 	self.arc = arc

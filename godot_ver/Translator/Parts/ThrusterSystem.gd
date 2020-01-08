@@ -32,4 +32,4 @@ func movement_decision(desired_angle):
 		if thruster.get_movement_efficiency(desired_angle) > 0.9:
 			var imp_pos = thruster.position
 			var imp_vec = Vector2(5,0).rotated(desired_angle) * -1
-			get_parent().apply_impulse(imp_pos, imp_vec)
+			# get_parent().apply_impulse(imp_pos, imp_vec)
