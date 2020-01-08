@@ -52,10 +52,6 @@ func appendage_development():
 		if thruster_hox.is_expressed(scaled):
 			make_thruster_pair(i, scaled, TS_path)
 
-	# once thrusters are all made, turn them into array, and draw them
-	get_node(TS_path).thrusters = get_node(TS_path).get_children()
-	get_node(TS_path)._draw()
-
 
 func make_thruster_pair(point_index: int, scaled: float, TS_path: String):
 	var angle_gene = dna["ThrusterAngle"]
