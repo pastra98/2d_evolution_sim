@@ -26,4 +26,4 @@ func _draw():
 	"""This function will be shifted to a seperate drawer node, specified
 	in the dna.
 	"""
-	draw_colored_polygon(points, Color(0.709804, 0.176471, 0.176471))
+	draw_colored_polygon(points, Color.blue)
