@@ -28,8 +28,8 @@ func desired_ocs_impulse_angle():
 
 
 func movement_decision(desired_angle):
+	var some_list = []
 	for thruster in get_children():
-		if thruster.get_movement_efficiency(desired_angle) > 0.9:
-			var imp_pos = thruster.position
-			var imp_vec = Vector2(5,0).rotated(desired_angle) * -1
-			# get_parent().apply_impulse(imp_pos, imp_vec)
+		some_list.append(thruster.get_movement_efficiency(desired_angle))
+		if thruster.get_movement_efficiency(desired_angle) > 0.7:
+			thruster.apply_thrust()
