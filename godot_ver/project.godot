@@ -27,6 +27,7 @@ Translator="*res://Translator/Translator.tscn"
 
 2d/default_gravity_vector=Vector2( 0, 0 )
 2d/default_linear_damp=0.5
+2d/default_angular_damp=5
 
 [rendering]
 
