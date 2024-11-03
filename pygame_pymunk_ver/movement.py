@@ -73,7 +73,7 @@ class Thruster:
         self.start_a = start_a
         self.end_a = end_a
         self.mirrored = mirrored
-        self.vec = pygame.math.Vector2(1,0) # vec pointing 9 o'clock
+        self.vec = (-1, 0)  # Initial pointing 9 o'clock
 
     def update(self, rad, power=1):
         """changes thrust vector of specified thruster. Method: calculates
@@ -81,9 +81,9 @@ class Thruster:
         if rad = 1. -> angle = end_a. power is multiplied with vec.
         """
         new_angle = self.start_a + rad * (self.end_a-self.start_a)
-        # vec pointing 9 o'clock is rotated clockwise, and is multiplied by
-        # power for negative impulse
-        self.vec = pygame.math.Vector2(-1, 0).rotate(-new_angle) * power
+        vec = pygame.math.Vector2(-1, 0).rotate(-new_angle) * power
+        self.vec = (vec.x, vec.y)
+
 
 
 class ThrusterSystem:
@@ -103,7 +103,9 @@ class ThrusterSystem:
             self.thruster_l[1].update(1)
             self.thruster_l[2].update(0)
 
-        for t in apply_to: self.body.apply_impulse_at_local_point(-t.vec, t.point)
+        for t in apply_to:
+            impulse = (-t.vec[0], -t.vec[1])
+            self.body.apply_impulse_at_local_point(impulse, t.point)
 
     def move(self, direction):
         if direction == "forward":
@@ -123,5 +125,8 @@ class ThrusterSystem:
             self.thruster_l[1].update(1)
             self.thruster_l[3].update(0)
 
-        for t in apply_to: self.body.apply_impulse_at_local_point(-t.vec, t.point)
+        for t in apply_to:
+            impulse = (-t.vec[0], -t.vec[1])
+            self.body.apply_impulse_at_local_point(impulse, t.point)
+
 

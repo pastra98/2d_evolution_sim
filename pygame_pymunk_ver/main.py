@@ -38,7 +38,7 @@ line_body = pymunk.Body(10, line_moment, body_type=pymunk.Body.STATIC)
 line_body.position = (350, -80)
 
 line_shape = pymunk.Segment(line_body, (0, 0), (500, 300), 10)
-space.add(line_shape)
+space.add(line_shape, line_body)
 
 # Main loop
 game_running = True
